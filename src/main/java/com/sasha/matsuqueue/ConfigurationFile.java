@@ -1,5 +1,6 @@
 package com.sasha.matsuqueue;
 
+import com.sasha.matsuqueue.queue.IMatsuQueue;
 import com.sasha.matsuqueue.queue.IMatsuSlots;
 import com.sasha.matsuqueue.queue.impl.MatsuQueue;
 import com.sasha.matsuqueue.queue.impl.MatsuSlots;
@@ -8,7 +9,6 @@ import me.someonelove.quickyml.YMLParser;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -26,7 +26,6 @@ public class ConfigurationFile {
     public String positionMessage;
     public String connectingMessage;
     public ConcurrentHashMap<String, IMatsuSlots> slotsMap = new ConcurrentHashMap<>();
-    public HashMap<String, String> tabMap = new HashMap<>();
 
     protected ConfigurationFile() {
         File file = new File(FILE_NAME);
@@ -103,7 +102,10 @@ public class ConfigurationFile {
             final String slot = parser.getString("queues." + queue + ".slots");
             if (!slots.contains(slot)) continue;
             final String permission = parser.getString("queues." + queue + ".permission");
-            slotsMap.get(slot).associateQueue(new MatsuQueue(queue, priority, slot, permission));
+            IMatsuQueue q = new MatsuQueue(queue, priority, slot, permission);
+            q.setTabText(parser.getString("queues.priority.tabHeader", "\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n"),
+                    parser.getString("queues.priority.tabFooter", "\n&6You can donate at https://paypal.me/eatsasha for priority access to the server.\n"));
+            slotsMap.get(slot).associateQueue(q);
             Matsu.INSTANCE.getLogger().log(Level.INFO, "Discovered valid queue " + queue + " associated to slot type " + slot);
         }
     }
