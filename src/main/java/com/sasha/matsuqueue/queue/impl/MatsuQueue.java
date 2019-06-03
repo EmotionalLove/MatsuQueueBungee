@@ -1,6 +1,5 @@
 package com.sasha.matsuqueue.queue.impl;
 
-import com.sasha.matsuqueue.ConfigurationFile;
 import com.sasha.matsuqueue.Matsu;
 import com.sasha.matsuqueue.queue.IMatsuQueue;
 import com.sun.istack.internal.Nullable;
