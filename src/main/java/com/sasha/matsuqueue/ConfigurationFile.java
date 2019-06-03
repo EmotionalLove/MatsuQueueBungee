@@ -76,6 +76,7 @@ public class ConfigurationFile {
         serverFullMessage = parser.getString("serverFullMessage", "&6Server is full");
         queueServerKey = parser.getString("queueServerKey", "queue");
         positionMessage = parser.getString("positionMessage", "&6Your position in queue is &l{pos}");
+        connectingMessage = parser.getString("connectingMessage", "&6Connecting to the server...");
         destinationServerKey = parser.getString("destinationServerKey", "main");
         final List<String> slots = parser.getStringList("slotnames");
         for (final String slot : slots) {

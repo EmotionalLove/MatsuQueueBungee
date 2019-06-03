@@ -22,10 +22,13 @@ public interface IMatsuSlots {
 
     boolean needsQueueing();
 
+    void onPlayerLeave(ProxiedPlayer player);
+
     void associateQueue(IMatsuQueue queue);
 
     ConcurrentHashMap<String, IMatsuQueue> getAssociatedQueues();
 
     String getPermission();
 
+    void broadcast(String str);
 }

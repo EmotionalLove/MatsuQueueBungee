@@ -2,6 +2,9 @@ package com.sasha.matsuqueue.queue;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.LinkedList;
+import java.util.UUID;
+
 /**
  * Interface that sets up an easy way to manage this queue
  */
@@ -19,6 +22,8 @@ public interface IMatsuQueue {
 
     String getPermission();
 
-    void broadcast(String str);
+    LinkedList<UUID> getQueue();
+
+    //void broadcast(String str);
 
 }

@@ -20,13 +20,9 @@ public final class Matsu extends Plugin {
         getLogger().log(Level.INFO, "MatsuQueue is loading.");
         CONFIG = new ConfigurationFile();
         this.getProxy().getPluginManager().registerListener(this, new EventReactions());
-        executorService.scheduleWithFixedDelay(() -> {
-            CONFIG.slotsMap.forEach((name, slot) -> {
-                slot.getAssociatedQueues().forEach((qname, queue) -> {
-                    queue.broadcast(CONFIG.positionMessage.replace("&", "\247"));
-                });
-            });
-        }, 10L, 10L, TimeUnit.SECONDS);
+        executorService.scheduleWithFixedDelay(() ->
+                        CONFIG.slotsMap.forEach((name, slot) -> slot.broadcast(CONFIG.positionMessage.replace("&", "\247"))),
+                10L, 10L, TimeUnit.SECONDS);
         getLogger().log(Level.INFO, "MatsuQueue has loaded.");
     }
 

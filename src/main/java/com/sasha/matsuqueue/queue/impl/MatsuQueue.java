@@ -6,8 +6,8 @@ import com.sun.istack.internal.Nullable;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.LinkedList;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 public class MatsuQueue implements IMatsuQueue {
@@ -16,7 +16,7 @@ public class MatsuQueue implements IMatsuQueue {
     public final int priority;
     public final String permission;
 
-    private ConcurrentLinkedQueue<UUID> queue = new ConcurrentLinkedQueue<>();
+    private LinkedList<UUID> queue = new LinkedList<>();
 
     public MatsuQueue(String name, int priority, String slots, @Nullable String permission) {
         this.name = name;
@@ -27,7 +27,7 @@ public class MatsuQueue implements IMatsuQueue {
 
     @Override
     public void addPlayerToQueue(ProxiedPlayer player) {
-        queue.offer(player.getUniqueId());
+        queue.add(player.getUniqueId());
         player.sendMessage(new TextComponent(Matsu.CONFIG.serverFullMessage.replace("&", "\247")));
         Matsu.INSTANCE.getLogger().log(Level.INFO, player.getName() + " placed in queue " + this.name);
     }
@@ -39,9 +39,12 @@ public class MatsuQueue implements IMatsuQueue {
 
     @Override
     public void connectFirstPlayerToDestinationServer() {
-        ProxiedPlayer player = Matsu.INSTANCE.getProxy().getPlayer(queue.poll());
+        if (queue.isEmpty()) return;
+        ProxiedPlayer player = Matsu.INSTANCE.getProxy().getPlayer(queue.getFirst());
+        player.sendMessage(new TextComponent(Matsu.CONFIG.connectingMessage.replace("&", "\247")));
         player.connect(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey));
         Matsu.INSTANCE.getLogger().log(Level.INFO, player.getName() + " transferred to destination server");
+        queue.remove(queue.getFirst());
     }
 
     @Override
@@ -60,14 +63,9 @@ public class MatsuQueue implements IMatsuQueue {
     }
 
     @Override
-    public void broadcast(String str) {
-        int count = 0;
-        for (UUID uuid : this.queue) {
-            ProxiedPlayer player = Matsu.INSTANCE.getProxy().getPlayer(uuid);
-            if (player != null) {
-                player.sendMessage(new TextComponent(str.replace("{pos}", (count + 1) + "")));
-            }
-            count++;
-        }
+    public final LinkedList<UUID> getQueue() {
+        return queue;
     }
+
+
 }

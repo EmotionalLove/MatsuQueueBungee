@@ -1,15 +1,15 @@
 package com.sasha.matsuqueue.queue.impl;
 
+import com.sasha.matsuqueue.Matsu;
 import com.sasha.matsuqueue.queue.IMatsuQueue;
 import com.sasha.matsuqueue.queue.IMatsuSlots;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MatsuSlots implements IMatsuSlots, Listener {
 
@@ -37,6 +37,10 @@ public class MatsuSlots implements IMatsuSlots, Listener {
 
     @Override
     public void queuePlayer(ProxiedPlayer player) {
+        if (!needsQueueing()) {
+            occupySlot(player);
+            return;
+        }
         for (Map.Entry<String, IMatsuQueue> entry : associatedQueues.entrySet()) {
             for (String permission : player.getPermissions()) {
                 if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
@@ -61,6 +65,17 @@ public class MatsuSlots implements IMatsuSlots, Listener {
         return getAvailableSlots() == 0;
     }
 
+    @Override
+    public void onPlayerLeave(ProxiedPlayer player) {
+        if (slots.contains(player.getUniqueId())) {
+            releaseSlot(player);
+            return;
+        }
+        this.getAssociatedQueues().forEach((name, queue) -> {
+            queue.removePlayerFromQueue(player);
+        });
+    }
+
 
     // these shouldn't be called by public code.
 
@@ -78,6 +93,7 @@ public class MatsuSlots implements IMatsuSlots, Listener {
 
     protected void releaseSlot(UUID player) {
         slots.remove(player);
+        associatedQueues.values().stream().sorted(Comparator.comparingInt(IMatsuQueue::getPriority)).forEach(IMatsuQueue::connectFirstPlayerToDestinationServer);
     }
 
     @Override
@@ -94,5 +110,19 @@ public class MatsuSlots implements IMatsuSlots, Listener {
     @Override
     public String getPermission() {
         return permission;
+    }
+
+    @Override
+    public void broadcast(String str) {
+        AtomicInteger integer = new AtomicInteger(0);
+        associatedQueues.values().stream().sorted(Comparator.comparingInt(IMatsuQueue::getPriority)).forEach(queue -> {
+            for (UUID uuid : queue.getQueue()) {
+                ProxiedPlayer player = Matsu.INSTANCE.getProxy().getPlayer(uuid);
+                if (player != null) {
+                    player.sendMessage(new TextComponent(str.replace("{pos}", (integer.get() + 1) + "")));
+                }
+                integer.getAndIncrement();
+            }
+        });
     }
 }

@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -14,6 +15,13 @@ import net.md_5.bungee.event.EventHandler;
 import java.util.Map;
 
 public class EventReactions implements Listener {
+
+    @EventHandler
+    public void onLeave(PlayerDisconnectEvent e) {
+        Matsu.CONFIG.slotsMap.forEach((name, slot) -> {
+            slot.onPlayerLeave(e.getPlayer());
+        });
+    }
 
     @EventHandler
     public void onPreJoin(PreLoginEvent e) {
@@ -66,7 +74,7 @@ public class EventReactions implements Listener {
 
     @EventHandler
     public void onProxyJoin(ServerConnectedEvent e) {
-        if (!e.getServer().getInfo().getName().equalsIgnoreCase(Matsu.CONFIG.queueServerKey)) return;
+        //if (!e.getServer().getInfo().getName().equalsIgnoreCase(Matsu.CONFIG.queueServerKey)) return;
         ProxiedPlayer p = e.getPlayer();
         for (String permission : p.getPermissions()) {
             if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
