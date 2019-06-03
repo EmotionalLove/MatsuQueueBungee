@@ -78,10 +78,10 @@ public class EventReactions implements Listener {
         ProxiedPlayer p = e.getPlayer();
         for (String permission : p.getPermissions()) {
             if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
-            String[] broken = permission.split(".");
+            String[] broken = permission.split("\\.");
             if (broken.length != 3) continue;
             for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
-                if (slots.getValue().getPermission().equals(broken[1])) {
+                if (slots.getValue().getPermission().equalsIgnoreCase(broken[1])) {
                     slots.getValue().queuePlayer(e.getPlayer());
                     return;
                 }

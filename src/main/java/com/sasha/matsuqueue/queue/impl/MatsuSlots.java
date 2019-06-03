@@ -44,7 +44,7 @@ public class MatsuSlots implements IMatsuSlots, Listener {
         for (Map.Entry<String, IMatsuQueue> entry : associatedQueues.entrySet()) {
             for (String permission : player.getPermissions()) {
                 if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
-                String[] broken = permission.split(".");
+                String[] broken = permission.split("\\.");
                 if (broken.length != 3) continue;
                 if (entry.getValue().getPermission().equals(broken[2])) {
                     entry.getValue().addPlayerToQueue(player);
