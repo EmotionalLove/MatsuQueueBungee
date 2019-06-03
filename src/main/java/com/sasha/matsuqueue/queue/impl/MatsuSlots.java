@@ -10,6 +10,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class MatsuSlots implements IMatsuSlots, Listener {
 
@@ -79,7 +80,8 @@ public class MatsuSlots implements IMatsuSlots, Listener {
 
     // these shouldn't be called by public code.
 
-    protected void occupySlot(ProxiedPlayer player) {
+    @Override
+    public void occupySlot(ProxiedPlayer player) {
         this.occupySlot(player.getUniqueId());
     }
 
@@ -93,7 +95,12 @@ public class MatsuSlots implements IMatsuSlots, Listener {
 
     protected void releaseSlot(UUID player) {
         slots.remove(player);
-        associatedQueues.values().stream().sorted(Comparator.comparingInt(IMatsuQueue::getPriority)).forEach(IMatsuQueue::connectFirstPlayerToDestinationServer);
+        List<IMatsuQueue> sorted = associatedQueues.values().stream().sorted(Comparator.comparingInt(IMatsuQueue::getPriority)).collect(Collectors.toList());//.forEach(IMatsuQueue::connectFirstPlayerToDestinationServer);
+        for (IMatsuQueue iMatsuQueue : sorted) {
+            if (iMatsuQueue.getQueue().isEmpty()) continue;
+            iMatsuQueue.connectFirstPlayerToDestinationServer();
+            break;
+        }
     }
 
     @Override

@@ -6,15 +6,17 @@ import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 
 public class EventReactions implements Listener {
+
+    private static ArrayList<UUID> toDo = new ArrayList<>();
 
     @EventHandler
     public void onLeave(PlayerDisconnectEvent e) {
@@ -72,9 +74,16 @@ public class EventReactions implements Listener {
         });
     }
 
+
+    @EventHandler
+    public void postLogin(PostLoginEvent e) {
+        toDo.add(e.getPlayer().getUniqueId());
+    }
+
     @EventHandler
     public void onProxyJoin(ServerConnectedEvent e) {
-        //if (!e.getServer().getInfo().getName().equalsIgnoreCase(Matsu.CONFIG.queueServerKey)) return;
+        if (!toDo.contains(e.getPlayer().getUniqueId())) return;
+        toDo.remove(e.getPlayer().getUniqueId());
         ProxiedPlayer p = e.getPlayer();
         for (String permission : p.getPermissions()) {
             if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;

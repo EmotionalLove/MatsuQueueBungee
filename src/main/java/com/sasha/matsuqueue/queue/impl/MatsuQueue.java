@@ -1,5 +1,6 @@
 package com.sasha.matsuqueue.queue.impl;
 
+import com.sasha.matsuqueue.ConfigurationFile;
 import com.sasha.matsuqueue.Matsu;
 import com.sasha.matsuqueue.queue.IMatsuQueue;
 import com.sun.istack.internal.Nullable;
@@ -15,6 +16,7 @@ public class MatsuQueue implements IMatsuQueue {
     public final String name;
     public final int priority;
     public final String permission;
+    public final String slots;
 
     private LinkedList<UUID> queue = new LinkedList<>();
 
@@ -22,7 +24,7 @@ public class MatsuQueue implements IMatsuQueue {
         this.name = name;
         this.priority = priority;
         this.permission = permission;
-        // add to slots
+        this.slots = slots;
     }
 
     @Override
@@ -44,6 +46,7 @@ public class MatsuQueue implements IMatsuQueue {
         player.sendMessage(new TextComponent(Matsu.CONFIG.connectingMessage.replace("&", "\247")));
         player.connect(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey));
         Matsu.INSTANCE.getLogger().log(Level.INFO, player.getName() + " transferred to destination server");
+        Matsu.CONFIG.slotsMap.get(slots).occupySlot(player);
         queue.remove(queue.getFirst());
     }
 

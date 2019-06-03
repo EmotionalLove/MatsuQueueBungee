@@ -24,6 +24,8 @@ public interface IMatsuSlots {
 
     void onPlayerLeave(ProxiedPlayer player);
 
+    void occupySlot(ProxiedPlayer player);
+
     void associateQueue(IMatsuQueue queue);
 
     ConcurrentHashMap<String, IMatsuQueue> getAssociatedQueues();
