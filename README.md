@@ -1,4 +1,4 @@
-# MatsuQueue
+# MatsuQueue (待つQueue)
 A queue plugin for controlling the player count of survival servers
 
 ## Oh sh*t there's nothing here
