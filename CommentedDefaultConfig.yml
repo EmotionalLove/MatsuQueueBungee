@@ -1,0 +1,41 @@
+serverFullMessage: '&6Server is full'
+connectingMessage: '&6Connecting to the server...'
+positionMessage: '&6Your position in queue is &l{pos}'
+queueServerKey: queue
+destinationServerKey: main
+slots:
+  standard:
+    capacity: 150
+    permission: default
+  priority:
+    capacity: 50
+    permission: priority
+queues:
+  standard:
+    priority: 3
+    slots: standard
+    permission: default
+    tabHeader: '\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n'
+    tabFooter: \n&6You can donate at https://paypal.me/eatsasha for priority access
+      to the server.\n
+  standardpriority:
+    priority: 2
+    slots: standard
+    permission: faster
+    tabHeader: '\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n'
+    tabFooter: \n&6Thank you for being a standard donator. You have standard priority
+      queue status.\n
+  priority:
+    priority: 1
+    slots: priority
+    permission: reserved
+    tabHeader: '\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n'
+    tabFooter: \n&6Thank you for being a premium donator. You have access to the reserved
+      slots on the server.\n
+queuenames:
+- standard
+- standardpriority
+- priority
+slotnames:
+- standard
+- priority
