@@ -74,8 +74,8 @@ public class MatsuQueue implements IMatsuQueue {
 
     @Override
     public void setTabText(String header, String footer) {
-        this.header = header;
-        this.footer = footer;
+        this.header = header.replace("\\n", "\n");
+        this.footer = footer.replace("\\n", "\n");
     }
 
     @Override

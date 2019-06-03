@@ -101,8 +101,8 @@ public class ConfigurationFile {
             if (!slots.contains(slot)) continue;
             final String permission = parser.getString("queues." + queue + ".permission");
             IMatsuQueue q = new MatsuQueue(queue, priority, slot, permission);
-            q.setTabText(parser.getString("queues.priority.tabHeader", "\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n"),
-                    parser.getString("queues.priority.tabFooter", "\n&6You can donate at https://paypal.me/eatsasha for priority access to the server.\n"));
+            q.setTabText(parser.getString("queues." + queue + ".tabHeader", "\\n&dMatsuQueue\\n\\n&6Server is full\\n&6Position in queue: &l{pos}\\n"),
+                    parser.getString("queues." + queue + ".tabFooter", "\\n&6You can donate at https://paypal.me/eatsasha for priority access to the server.\\n"));
             slotsMap.get(slot).associateQueue(q);
             Matsu.INSTANCE.getLogger().log(Level.INFO, "Discovered valid queue " + queue + " associated to slot type " + slot);
         }
