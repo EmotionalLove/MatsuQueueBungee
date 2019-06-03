@@ -8,6 +8,7 @@ import me.someonelove.quickyml.YMLParser;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ public class ConfigurationFile {
     public String positionMessage;
     public String connectingMessage;
     public ConcurrentHashMap<String, IMatsuSlots> slotsMap = new ConcurrentHashMap<>();
+    public HashMap<String, String> tabMap = new HashMap<>();
 
     protected ConfigurationFile() {
         File file = new File(FILE_NAME);
@@ -32,6 +34,8 @@ public class ConfigurationFile {
             try {
                 file.createNewFile();
                 YMLParser parser = new YMLParser(file);
+                parser.set("tabHeader", "\n&5MatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}");
+                parser.set("tabFooter", "&6Server is full");
                 parser.set("serverFullMessage", "&6Server is full");
                 parser.set("connectingMessage", "&6Connecting to the server...");
                 parser.set("positionMessage", "&6Your position in queue is &l{pos}");
@@ -46,14 +50,20 @@ public class ConfigurationFile {
                 parser.set("queues.standard.priority", 3);
                 parser.set("queues.standard.slots", "standard");
                 parser.set("queues.standard.permission", "default");
+                parser.set("queues.standard.tabHeader", "\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n");
+                parser.set("queues.standard.tabFooter", "\n&6You can donate at https://paypal.me/eatsasha for priority access to the server.\n");
                 // priority queue (standard slots)
                 parser.set("queues.standardpriority.priority", 2);
                 parser.set("queues.standardpriority.slots", "standard");
                 parser.set("queues.standardpriority.permission", "faster");
+                parser.set("queues.standardpriority.tabHeader", "\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n");
+                parser.set("queues.standardpriority.tabFooter", "\n&6Thank you for being a standard donator. You have standard priority queue status.\n");
                 // priority queue (priority slots)
                 parser.set("queues.priority.priority", 1);
                 parser.set("queues.priority.slots", "priority");
                 parser.set("queues.priority.permission", "reserved");
+                parser.set("queues.priority.tabHeader", "\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n");
+                parser.set("queues.priority.tabFooter", "\n&6Thank you for being a premium donator. You have access to the reserved slots on the server.\n");
 
                 ArrayList<String> queues = new ArrayList<>();
                 queues.add("standard");

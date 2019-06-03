@@ -17,6 +17,9 @@ public class MatsuQueue implements IMatsuQueue {
     public final String permission;
     public final String slots;
 
+    private String header;
+    private String footer;
+
     private LinkedList<UUID> queue = new LinkedList<>();
 
     public MatsuQueue(String name, int priority, String slots, @Nullable String permission) {
@@ -67,6 +70,22 @@ public class MatsuQueue implements IMatsuQueue {
     @Override
     public final LinkedList<UUID> getQueue() {
         return queue;
+    }
+
+    @Override
+    public void setTabText(String header, String footer) {
+        this.header = header;
+        this.footer = footer;
+    }
+
+    @Override
+    public String getTabHeader() {
+        return header.replace("&", "\247");
+    }
+
+    @Override
+    public String getTabFooter() {
+        return footer.replace("&", "\247");
     }
 
 

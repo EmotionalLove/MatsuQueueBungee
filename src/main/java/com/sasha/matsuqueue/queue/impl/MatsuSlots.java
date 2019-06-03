@@ -127,6 +127,8 @@ public class MatsuSlots implements IMatsuSlots, Listener {
                 ProxiedPlayer player = Matsu.INSTANCE.getProxy().getPlayer(uuid);
                 if (player != null) {
                     player.sendMessage(new TextComponent(str.replace("{pos}", (integer.get() + 1) + "")));
+                    player.setTabHeader(new TextComponent(queue.getTabHeader().replace("{pos}", (integer.get() + 1) + "")),
+                            new TextComponent(queue.getTabFooter().replace("{pos}", (integer.get() + 1) + "")));
                 }
                 integer.getAndIncrement();
             }

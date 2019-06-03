@@ -24,6 +24,10 @@ public interface IMatsuQueue {
 
     LinkedList<UUID> getQueue();
 
-    //void broadcast(String str);
+    void setTabText(String header, String footer);
+
+    String getTabHeader();
+
+    String getTabFooter();
 
 }
