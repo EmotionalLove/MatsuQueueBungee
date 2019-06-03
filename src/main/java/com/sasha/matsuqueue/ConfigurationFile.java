@@ -22,6 +22,7 @@ public class ConfigurationFile {
     public String queueServerKey;
     public String destinationServerKey;
     public String serverFullMessage;
+    public String positionMessage;
     public String connectingMessage;
     public ConcurrentHashMap<String, IMatsuSlots> slotsMap = new ConcurrentHashMap<>();
 
@@ -33,6 +34,7 @@ public class ConfigurationFile {
                 YMLParser parser = new YMLParser(file);
                 parser.set("serverFullMessage", "&6Server is full");
                 parser.set("connectingMessage", "&6Connecting to the server...");
+                parser.set("positionMessage", "&6Your position in queue is &l{pos}");
                 parser.set("queueServerKey", "queue");
                 parser.set("destinationServerKey", "main");
                 // slots
@@ -73,6 +75,7 @@ public class ConfigurationFile {
         YMLParser parser = new YMLParser(file);
         serverFullMessage = parser.getString("serverFullMessage", "&6Server is full");
         queueServerKey = parser.getString("queueServerKey", "queue");
+        positionMessage = parser.getString("positionMessage", "&6Your position in queue is &l{pos}");
         destinationServerKey = parser.getString("destinationServerKey", "main");
         final List<String> slots = parser.getStringList("slotnames");
         for (final String slot : slots) {

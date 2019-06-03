@@ -58,4 +58,16 @@ public class MatsuQueue implements IMatsuQueue {
     public String getPermission() {
         return permission;
     }
+
+    @Override
+    public void broadcast(String str) {
+        int count = 0;
+        for (UUID uuid : this.queue) {
+            ProxiedPlayer player = Matsu.INSTANCE.getProxy().getPlayer(uuid);
+            if (player != null) {
+                player.sendMessage(new TextComponent(str.replace("{pos}", (count + 1) + "")));
+            }
+            count++;
+        }
+    }
 }

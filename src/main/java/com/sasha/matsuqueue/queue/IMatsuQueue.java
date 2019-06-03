@@ -19,4 +19,6 @@ public interface IMatsuQueue {
 
     String getPermission();
 
+    void broadcast(String str);
+
 }

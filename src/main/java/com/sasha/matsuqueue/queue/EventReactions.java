@@ -78,10 +78,10 @@ public class EventReactions implements Listener {
                     return;
                 }
             }
-            for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
-                if (slots.getValue().getPermission().equals("default")) {
-                    slots.getValue().queuePlayer(e.getPlayer());
-                }
+        }
+        for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
+            if (slots.getValue().getPermission().equals("default")) {
+                slots.getValue().queuePlayer(e.getPlayer());
             }
         }
     }
