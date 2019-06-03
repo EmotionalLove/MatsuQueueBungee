@@ -1,6 +1,5 @@
 package com.sasha.matsuqueue;
 
-import com.sasha.matsuqueue.queue.EventReactions;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.concurrent.Executors;
@@ -24,7 +23,7 @@ public final class Matsu extends Plugin {
         executorService.scheduleWithFixedDelay(() -> {
             CONFIG.slotsMap.forEach((name, slot) -> {
                 slot.getAssociatedQueues().forEach((qname, queue) -> {
-                    queue.broadcast(CONFIG.);
+                    queue.broadcast(CONFIG.positionMessage.replace("&", "\247"));
                 });
             });
         }, 10L, 10L, TimeUnit.SECONDS);
