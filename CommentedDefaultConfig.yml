@@ -1,41 +1,60 @@
+# The first message to be displayed when the player enters the queue server, notifying them that the server is full.
 serverFullMessage: '&6Server is full'
+# The message displayed when the player finishes queueing and is being redirected to the main server.
 connectingMessage: '&6Connecting to the server...'
+# The message displayed every 10 seconds in chat that shows the position in queue the player is in.
 positionMessage: '&6Your position in queue is &l{pos}'
+# The name of the queue server in your bungeecord config
 queueServerKey: queue
+# The name of the main server in your bungeecord config
 destinationServerKey: main
+# These determine how many slots in total are available on your main server. The below default config will allow at the absolute maximum 200 players at once on the server.
+# 50 of those players MUST have the permission for priority, 150 of those players MUST have the default permission.
+# in this plugin, the permission identifier is split up into 2 levels. "matsuqueue.slot_tier.queue_tier" (ex. matsuqueue.default.faster will give the player access to the standardpriority queue)
+# The "permission" value below will be the one in the middle.
+# Feel free to create as many slot tiers as you want, or modify the existing ones.
+
+# Important note: you must ALWAYS have a default slot tier, and a default queue tied to the default slot tier for players that don't have any special permissions to get in faster.
+
 slots:
   standard:
     capacity: 150
     permission: default
   priority:
-    capacity: 50
+    capacity: 50 # These can act as "reserved" slots for your top donators. Even if the 150 standard slots are occupied, people who have the permission for this tier will get in instantly.
     permission: priority
+# These are the individual queues. These are tied to the slot tiers above. When a player finishes queueing in one of these queues, they will then occupy a slot in the specified slot tier
+# For queues that occupy the same slot tier, use the priority integer to determine which queue has more priority.
+# Queues on the same slot tier that have a lower priority integer will have higher priority over the others. When a user joins this queue, they will be placed behind members of queues with lower integers, at the end of the line of their own queue, but in front of members of queues with higher integers (their number will bump up by 1).
+# You can also add customer tab heater/footers for your different queues, to help users identify which level of priority they have.
 queues:
   standard:
-    priority: 3
+    priority: 3 # This is the default queue that everyone will be placed into, unless they have a special permission to go in a faster queue
     slots: standard
     permission: default
     tabHeader: '\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n'
     tabFooter: \n&6You can donate at https://paypal.me/eatsasha for priority access
       to the server.\n
   standardpriority:
-    priority: 2
+    priority: 2 # This queue has higher priority over the standard queue, meaning when a member joins this queue, the members of the lower priority queue will be bumped up one spot. Take note how both of these queues have the same slot designation
     slots: standard
     permission: faster
     tabHeader: '\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n'
     tabFooter: \n&6Thank you for being a standard donator. You have standard priority
       queue status.\n
   priority:
-    priority: 1
+    priority: 1 # This queue has the most priority, however it uses the "priority" slots, meaning it won't effect the other queues.
     slots: priority
     permission: reserved
     tabHeader: '\n&dMatsuQueue\n\n&6Server is full\n&6Position in queue: &l{pos}\n'
     tabFooter: \n&6Thank you for being a premium donator. You have access to the reserved
       slots on the server.\n
+# All of the names of the queues you specified must go here. The names MUST match the YAML key you used (https://i.imgur.com/7WKDv7n.png)
 queuenames:
 - standard
 - standardpriority
 - priority
+# Same deal here, but for slot names (https://i.imgur.com/AUC3O37.png)
 slotnames:
 - standard
 - priority
