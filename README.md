@@ -6,3 +6,10 @@ Yeah it's like 3AM rn ;-;, I'll write stuff like later when I sleep. For now jus
 
 ## A note on bugs
 Don't expect anything to be perfect yet ;p
+
+## //todo
+- ping the destination server before moving the player in case it's down. if it's down just keep periodically trying to join it and broadcast a notification in chat to all waiting players that the queue will begin moving again when the server is back up.
+
+- maybe make a way to hold you spot for a few seconds in case you accidentally disconnected/crashed/etc?
+
+- add priority integer to slot groups
