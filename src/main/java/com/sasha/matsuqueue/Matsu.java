@@ -1,7 +1,9 @@
 package com.sasha.matsuqueue;
 
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,5 +31,22 @@ public final class Matsu extends Plugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static boolean isServerUp(ServerInfo info) {
+        CountDownLatch latch = new CountDownLatch(1);
+        final boolean[] up = {true};
+        info.ping((result, error) -> {
+            if (error != null) {
+                up[0] = false;
+            }
+            latch.countDown();
+        });
+        try {
+            latch.await(10L, TimeUnit.SECONDS);
+        } catch (InterruptedException exc) {
+            exc.printStackTrace();
+        }
+        return up[0];
     }
 }

@@ -77,6 +77,14 @@ public class EventReactions implements Listener {
         });
     }
 
+    @EventHandler
+    public void preLogin(PreLoginEvent e) {
+        if (!Matsu.isServerUp(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey))) {
+            e.setCancelReason(new TextComponent("\2474The main server is unreachable."));
+            e.setCancelled(true);
+        }
+    }
+
 
     @EventHandler
     public void postLogin(PostLoginEvent e) {
