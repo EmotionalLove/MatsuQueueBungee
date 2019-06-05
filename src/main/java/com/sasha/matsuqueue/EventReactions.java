@@ -83,6 +83,10 @@ public class EventReactions implements Listener {
             e.setCancelReason(new TextComponent("\2474The main server is unreachable."));
             e.setCancelled(true);
         }
+        if (!Matsu.isServerUp(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.queueServerKey))) {
+            e.setCancelReason(new TextComponent("\2474The queue server is unreachable."));
+            e.setCancelled(true);
+        }
     }
 
 
