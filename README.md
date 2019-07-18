@@ -19,6 +19,8 @@ You can also set up your config to allow players to donate for faster access to 
 - Run your Bukkit and Bungeecord servers and ensure your config is working as intended. (You can test by setting the MatsuQueue player limit to 1 or 2 and opening multiple instances of Minecraft.)
 
 ## Commented Default Config
+warning: this may be chonky and confusing
+
 ```yml
 # The first message to be displayed when the player enters the queue server, notifying them that the server is full.
 serverFullMessage: '&6Server is full'
