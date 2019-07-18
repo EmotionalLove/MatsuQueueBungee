@@ -1,4 +1,4 @@
-package com.sasha.matsuqueue;
+package me.someonelove.matsuqueue.bungee;
 
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;

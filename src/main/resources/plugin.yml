@@ -1,5 +1,5 @@
 name: MatsuQueue
 version: 1.0.0
-main: com.sasha.matsuqueue.Matsu
+main: me.someonelove.matsuqueue.bungee.Matsu
 description: A queue plugin for controlling the player count of survival servers
 author: Sasha

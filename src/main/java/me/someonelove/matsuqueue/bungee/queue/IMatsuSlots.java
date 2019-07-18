@@ -1,4 +1,4 @@
-package com.sasha.matsuqueue.queue;
+package me.someonelove.matsuqueue.bungee.queue;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 

@@ -1,8 +1,8 @@
-package com.sasha.matsuqueue.queue.impl;
+package me.someonelove.matsuqueue.bungee.queue.impl;
 
-import com.sasha.matsuqueue.Matsu;
-import com.sasha.matsuqueue.queue.IMatsuQueue;
-import com.sasha.matsuqueue.queue.IMatsuSlots;
+import me.someonelove.matsuqueue.bungee.Matsu;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuQueue;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuSlots;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;

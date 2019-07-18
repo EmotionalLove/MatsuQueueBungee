@@ -1,9 +1,9 @@
-package com.sasha.matsuqueue;
+package me.someonelove.matsuqueue.bungee;
 
-import com.sasha.matsuqueue.queue.IMatsuQueue;
-import com.sasha.matsuqueue.queue.IMatsuSlots;
-import com.sasha.matsuqueue.queue.impl.MatsuQueue;
-import com.sasha.matsuqueue.queue.impl.MatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuQueue;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.impl.MatsuQueue;
+import me.someonelove.matsuqueue.bungee.queue.impl.MatsuSlots;
 import me.someonelove.quickyml.YMLParser;
 
 import java.io.File;

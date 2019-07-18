@@ -1,6 +1,6 @@
-package com.sasha.matsuqueue;
+package me.someonelove.matsuqueue.bungee;
 
-import com.sasha.matsuqueue.queue.IMatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuSlots;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.chat.TextComponent;
