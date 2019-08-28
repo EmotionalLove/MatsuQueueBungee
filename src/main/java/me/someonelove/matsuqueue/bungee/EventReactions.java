@@ -84,11 +84,11 @@ public class EventReactions implements Listener {
 
     @EventHandler
     public void preLogin(PreLoginEvent e) {
-        if (!Matsu.isServerUp(Matsu.destinationServerInfo)) {
+        if (!Matsu.destinationServerOk) {
             e.setCancelReason(new TextComponent("\2474The main server is unreachable."));
             e.setCancelled(true);
         }
-        if (!Matsu.isServerUp(Matsu.queueServerInfo)) {
+        if (!Matsu.queueServerOk) {
             e.setCancelReason(new TextComponent("\2474The queue server is unreachable."));
             e.setCancelled(true);
         }
