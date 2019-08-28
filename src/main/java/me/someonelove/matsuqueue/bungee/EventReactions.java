@@ -33,6 +33,11 @@ public class EventReactions implements Listener {
         ProxyServer.getInstance().setReconnectHandler(new ReconnectHandler() {
             @Override
             public ServerInfo getServer(ProxiedPlayer player) {
+                if (player.getPermissions().isEmpty()) {
+                    // use default queue server
+                }
+
+
                 for (String permission : player.getPermissions()) {
                     if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
                     String[] broken = permission.split("\\.");
@@ -40,9 +45,9 @@ public class EventReactions implements Listener {
                     for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
                         if (slots.getValue().getPermission().equals(broken[1])) {
                             if (slots.getValue().needsQueueing()) {
-                                return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.queueServerKey);
+                                return Matsu.queueServerInfo;
                             } else {
-                                return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey);
+                                return Matsu.destinationServerInfo;
                             }
                         }
                     }
@@ -50,9 +55,9 @@ public class EventReactions implements Listener {
                 for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
                     if (slots.getValue().getPermission().equals("default")) {
                         if (slots.getValue().needsQueueing()) {
-                            return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.queueServerKey);
+                            return Matsu.queueServerInfo;
                         } else {
-                            return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey);
+                            return Matsu.destinationServerInfo;
                         }
                     }
                 }
@@ -79,11 +84,11 @@ public class EventReactions implements Listener {
 
     @EventHandler
     public void preLogin(PreLoginEvent e) {
-        if (!Matsu.isServerUp(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey))) {
+        if (!Matsu.isServerUp(Matsu.destinationServerInfo)) {
             e.setCancelReason(new TextComponent("\2474The main server is unreachable."));
             e.setCancelled(true);
         }
-        if (!Matsu.isServerUp(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.queueServerKey))) {
+        if (!Matsu.isServerUp(Matsu.queueServerInfo)) {
             e.setCancelReason(new TextComponent("\2474The queue server is unreachable."));
             e.setCancelled(true);
         }

@@ -27,6 +27,9 @@ public class ConfigurationFile {
     public String connectingMessage;
     public ConcurrentHashMap<String, IMatsuSlots> slotsMap = new ConcurrentHashMap<>();
 
+    /**
+     * this is a mess please forgive me as i have sinned.
+     */
     protected ConfigurationFile() {
         File file = new File(FILE_NAME);
         if (!file.exists()) {
@@ -91,6 +94,8 @@ public class ConfigurationFile {
             final int capacity = parser.getInt("slots." + slot + ".capacity");
             final String permission = parser.getString("slots." + slot + ".permission");
             slotsMap.put(slot, new MatsuSlots(slot, capacity, permission));
+            // "matsuqueue.<slot_tier>."
+            Matsu.slotPermissionCache.put("matsuqueue." + permission + ".", slot);
             Matsu.INSTANCE.getLogger().log(Level.INFO, "Discovered valid slot type " + slot);
         }
         final List<String> queues = parser.getStringList("queuenames");
@@ -101,11 +106,14 @@ public class ConfigurationFile {
             if (!slots.contains(slot)) continue;
             final String permission = parser.getString("queues." + queue + ".permission");
             IMatsuQueue q = new MatsuQueue(queue, priority, slot, permission);
+            Matsu.queuePermissionCache.put("." + permission, queue);
             q.setTabText(parser.getString("queues." + queue + ".tabHeader", "\\n&dMatsuQueue\\n\\n&6Server is full\\n&6Position in queue: &l{pos}\\n"),
                     parser.getString("queues." + queue + ".tabFooter", "\\n&6You can donate at https://paypal.me/eatsasha for priority access to the server.\\n"));
             slotsMap.get(slot).associateQueue(q);
             Matsu.INSTANCE.getLogger().log(Level.INFO, "Discovered valid queue " + queue + " associated to slot type " + slot);
         }
+        Matsu.destinationServerInfo = Matsu.INSTANCE.getProxy().getServerInfo(this.destinationServerKey);
+        Matsu.queueServerInfo = Matsu.INSTANCE.getProxy().getServerInfo(this.queueServerKey);
     }
 
 

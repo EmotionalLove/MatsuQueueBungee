@@ -3,6 +3,7 @@ package me.someonelove.matsuqueue.bungee;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.util.LinkedHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,8 +17,17 @@ public final class Matsu extends Plugin {
 
     public static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 
+    /**
+     * Used to (hopefully) make the process of choosing a server on-join faster.
+     */
+    public static LinkedHashMap<String, String> slotPermissionCache = new LinkedHashMap<>();
+    public static LinkedHashMap<String, String> queuePermissionCache = new LinkedHashMap<>();
+    public static ServerInfo destinationServerInfo;
+    public static ServerInfo queueServerInfo;
+
     @Override
     public void onEnable() {
+        slotPermissionCache.clear();
         INSTANCE = this;
         getLogger().log(Level.INFO, "MatsuQueue is loading.");
         CONFIG = new ConfigurationFile();
