@@ -33,16 +33,22 @@ public class EventReactions implements Listener {
         ProxyServer.getInstance().setReconnectHandler(new ReconnectHandler() {
             @Override
             public ServerInfo getServer(ProxiedPlayer player) {
-                if (player.getPermissions().isEmpty()) {
-                    // use default queue server
-                }
-
-
                 for (String permission : player.getPermissions()) {
-                    if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
+                    if (!permission.matches("matsuqueue\\..*\\..*")) continue;
                     String[] broken = permission.split("\\.");
                     if (broken.length != 3) continue;
-                    for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
+                    String cache = broken[0] + "." + broken[1] + ".";
+                    IMatsuSlots slot = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get(cache));
+                    if (slot == null) {
+                        System.err.println(permission + " returns a null slot tier");
+                        continue;
+                    }
+                    if (slot.needsQueueing()) {
+                        return Matsu.queueServerInfo;
+                    } else {
+                        return Matsu.destinationServerInfo;
+                    }
+                    /*for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
                         if (slots.getValue().getPermission().equals(broken[1])) {
                             if (slots.getValue().needsQueueing()) {
                                 return Matsu.queueServerInfo;
@@ -50,19 +56,18 @@ public class EventReactions implements Listener {
                                 return Matsu.destinationServerInfo;
                             }
                         }
-                    }
+                    }*/
                 }
-                for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
-                    if (slots.getValue().getPermission().equals("default")) {
-                        if (slots.getValue().needsQueueing()) {
-                            return Matsu.queueServerInfo;
-                        } else {
-                            return Matsu.destinationServerInfo;
-                        }
-                    }
+                IMatsuSlots slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
+                if (slots == null) {
+                    player.disconnect(new TextComponent("\2476No valid queue server to connect to ;-;"));
+                    return null;
                 }
-                player.disconnect(new TextComponent("\2476No valid queue server to connect to ;-;"));
-                return null;
+                if (slots.needsQueueing()) {
+                    return Matsu.queueServerInfo;
+                } else {
+                    return Matsu.destinationServerInfo;
+                }
             }
 
             @Override
