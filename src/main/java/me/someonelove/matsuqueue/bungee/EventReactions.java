@@ -1,6 +1,6 @@
 package me.someonelove.matsuqueue.bungee;
 
-import me.someonelove.matsuqueue.bungee.queue.IMatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuSlotCluster;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -37,7 +37,7 @@ public class EventReactions implements Listener {
                     String[] broken = permission.split("\\.");
                     if (broken.length != 3) continue;
                     String cache = broken[0] + "." + broken[1] + ".";
-                    IMatsuSlots slot = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get(cache));
+                    IMatsuSlotCluster slot = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get(cache));
                     if (slot == null) {
                         System.err.println(permission + " returns a null slot tier");
                         continue;
@@ -48,7 +48,7 @@ public class EventReactions implements Listener {
                         return Matsu.destinationServerInfo;
                     }
                 }
-                IMatsuSlots slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
+                IMatsuSlotCluster slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
                 if (slots == null) {
                     player.disconnect(new TextComponent("\2476No valid queue server to connect to ;-;"));
                     return null;
@@ -105,7 +105,7 @@ public class EventReactions implements Listener {
             String[] broken = permission.split("\\.");
             if (broken.length != 3) continue;
             String cache = broken[0] + "." + broken[1] + ".";
-            IMatsuSlots slot = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get(cache));
+            IMatsuSlotCluster slot = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get(cache));
             if (slot == null) {
                 System.err.println(permission + " returns a null slot tier");
                 continue;
@@ -113,7 +113,7 @@ public class EventReactions implements Listener {
             slot.queuePlayer(p);
             break;
         }
-        IMatsuSlots slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
+        IMatsuSlotCluster slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
         slots.queuePlayer(p);
     }
 }

@@ -1,9 +1,9 @@
 package me.someonelove.matsuqueue.bungee;
 
 import me.someonelove.matsuqueue.bungee.queue.IMatsuQueue;
-import me.someonelove.matsuqueue.bungee.queue.IMatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuSlotCluster;
 import me.someonelove.matsuqueue.bungee.queue.impl.MatsuQueue;
-import me.someonelove.matsuqueue.bungee.queue.impl.MatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.impl.MatsuSlotCluster;
 import me.someonelove.quickyml.YMLParser;
 
 import java.io.File;
@@ -25,7 +25,7 @@ public class ConfigurationFile {
     public String serverFullMessage;
     public String positionMessage;
     public String connectingMessage;
-    public ConcurrentHashMap<String, IMatsuSlots> slotsMap = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, IMatsuSlotCluster> slotsMap = new ConcurrentHashMap<>();
 
     /**
      * this is a mess please forgive me as i have sinned.
@@ -93,7 +93,7 @@ public class ConfigurationFile {
             if (!parser.exists("slots." + slot)) continue;
             final int capacity = parser.getInt("slots." + slot + ".capacity");
             final String permission = parser.getString("slots." + slot + ".permission");
-            slotsMap.put(slot, new MatsuSlots(slot, capacity, permission));
+            slotsMap.put(slot, new MatsuSlotCluster(slot, capacity, permission));
             // "matsuqueue.<slot_tier>."
             Matsu.slotPermissionCache.put("matsuqueue." + permission + ".", slot);
             Matsu.INSTANCE.getLogger().log(Level.INFO, "Discovered valid slot type " + slot);

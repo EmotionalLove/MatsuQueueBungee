@@ -2,7 +2,7 @@ package me.someonelove.matsuqueue.bungee.queue.impl;
 
 import me.someonelove.matsuqueue.bungee.Matsu;
 import me.someonelove.matsuqueue.bungee.queue.IMatsuQueue;
-import me.someonelove.matsuqueue.bungee.queue.IMatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuSlotCluster;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class MatsuSlots implements IMatsuSlots, Listener {
+public class MatsuSlotCluster implements IMatsuSlotCluster, Listener {
 
     public final String name;
     public final String permission;
@@ -20,7 +20,7 @@ public class MatsuSlots implements IMatsuSlots, Listener {
     private List<UUID> slots = new ArrayList<>();
     private ConcurrentHashMap<String, IMatsuQueue> associatedQueues = new ConcurrentHashMap<>();
 
-    public MatsuSlots(String name, int capacity, String permission) {
+    public MatsuSlotCluster(String name, int capacity, String permission) {
         this.name = name;
         this.max = capacity;
         this.permission = permission;
