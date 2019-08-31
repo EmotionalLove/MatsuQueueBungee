@@ -111,7 +111,7 @@ public class EventReactions implements Listener {
                 continue;
             }
             slot.queuePlayer(p);
-            break;
+            return;
         }
         IMatsuSlotCluster slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
         slots.queuePlayer(p);
