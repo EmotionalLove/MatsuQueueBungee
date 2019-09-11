@@ -1,6 +1,6 @@
 package me.someonelove.matsuqueue.bungee;
 
-import me.someonelove.matsuqueue.bungee.queue.IMatsuSlots;
+import me.someonelove.matsuqueue.bungee.queue.IMatsuSlotCluster;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ReconnectHandler;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -14,12 +14,13 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class EventReactions implements Listener {
 
-    private static ArrayList<UUID> toDo = new ArrayList<>();
+    private static List<UUID> toDo = Collections.synchronizedList(new ArrayList<>());
 
     @EventHandler
     public void onLeave(PlayerDisconnectEvent e) {
@@ -34,30 +35,31 @@ public class EventReactions implements Listener {
             @Override
             public ServerInfo getServer(ProxiedPlayer player) {
                 for (String permission : player.getPermissions()) {
-                    if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
+                    if (!permission.matches("matsuqueue\\..*\\..*")) continue;
                     String[] broken = permission.split("\\.");
                     if (broken.length != 3) continue;
-                    for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
-                        if (slots.getValue().getPermission().equals(broken[1])) {
-                            if (slots.getValue().needsQueueing()) {
-                                return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.queueServerKey);
-                            } else {
-                                return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey);
-                            }
-                        }
+                    String cache = broken[0] + "." + broken[1] + ".";
+                    IMatsuSlotCluster slot = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get(cache));
+                    if (slot == null) {
+                        System.err.println(permission + " returns a null slot tier");
+                        continue;
+                    }
+                    if (slot.needsQueueing()) {
+                        return Matsu.queueServerInfo;
+                    } else {
+                        return Matsu.destinationServerInfo;
                     }
                 }
-                for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
-                    if (slots.getValue().getPermission().equals("default")) {
-                        if (slots.getValue().needsQueueing()) {
-                            return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.queueServerKey);
-                        } else {
-                            return Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey);
-                        }
-                    }
+                IMatsuSlotCluster slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
+                if (slots == null) {
+                    player.disconnect(new TextComponent("\2476No valid queue server to connect to ;-;"));
+                    return null;
                 }
-                player.disconnect(new TextComponent("\2476No valid queue server to connect to ;-;"));
-                return null;
+                if (slots.needsQueueing()) {
+                    return Matsu.queueServerInfo;
+                } else {
+                    return Matsu.destinationServerInfo;
+                }
             }
 
             @Override
@@ -79,11 +81,11 @@ public class EventReactions implements Listener {
 
     @EventHandler
     public void preLogin(PreLoginEvent e) {
-        if (!Matsu.isServerUp(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.destinationServerKey))) {
+        if (!Matsu.destinationServerOk) {
             e.setCancelReason(new TextComponent("\2474The main server is unreachable."));
             e.setCancelled(true);
         }
-        if (!Matsu.isServerUp(Matsu.INSTANCE.getProxy().getServerInfo(Matsu.CONFIG.queueServerKey))) {
+        if (!Matsu.queueServerOk) {
             e.setCancelReason(new TextComponent("\2474The queue server is unreachable."));
             e.setCancelled(true);
         }
@@ -101,20 +103,19 @@ public class EventReactions implements Listener {
         toDo.remove(e.getPlayer().getUniqueId());
         ProxiedPlayer p = e.getPlayer();
         for (String permission : p.getPermissions()) {
-            if (!permission.contains(".") || !permission.startsWith("matsuqueue")) continue;
+            if (!permission.matches("matsuqueue\\..*\\..*")) continue;
             String[] broken = permission.split("\\.");
             if (broken.length != 3) continue;
-            for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
-                if (slots.getValue().getPermission().equalsIgnoreCase(broken[1])) {
-                    slots.getValue().queuePlayer(e.getPlayer());
-                    return;
-                }
+            String cache = broken[0] + "." + broken[1] + ".";
+            IMatsuSlotCluster slot = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get(cache));
+            if (slot == null) {
+                System.err.println(permission + " returns a null slot tier");
+                continue;
             }
+            slot.queuePlayer(p);
+            return;
         }
-        for (Map.Entry<String, IMatsuSlots> slots : Matsu.CONFIG.slotsMap.entrySet()) {
-            if (slots.getValue().getPermission().equals("default")) {
-                slots.getValue().queuePlayer(e.getPlayer());
-            }
-        }
+        IMatsuSlotCluster slots = Matsu.CONFIG.slotsMap.get(Matsu.slotPermissionCache.get("matsuqueue.default."));
+        slots.queuePlayer(p);
     }
 }

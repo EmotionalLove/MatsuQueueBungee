@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Interface that defines and keeps track of the amount of slots on destination server
  */
-public interface IMatsuSlots {
+public interface IMatsuSlotCluster {
 
     int getAvailableSlots();
 
