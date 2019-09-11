@@ -14,11 +14,13 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class EventReactions implements Listener {
 
-    private static ArrayList<UUID> toDo = new ArrayList<>();
+    private static List<UUID> toDo = Collections.synchronizedList(new ArrayList<>());
 
     @EventHandler
     public void onLeave(PlayerDisconnectEvent e) {

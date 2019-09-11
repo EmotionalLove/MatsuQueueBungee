@@ -17,7 +17,7 @@ public class MatsuSlotCluster implements IMatsuSlotCluster, Listener {
     public final String name;
     public final String permission;
     private int max;
-    private List<UUID> slots = new ArrayList<>();
+    private List<UUID> slots = Collections.synchronizedList(new LinkedList<>());
     private ConcurrentHashMap<String, IMatsuQueue> associatedQueues = new ConcurrentHashMap<>();
 
     public MatsuSlotCluster(String name, int capacity, String permission) {
