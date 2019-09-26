@@ -14,6 +14,8 @@ public interface IMatsuQueue {
 
     void removePlayerFromQueue(ProxiedPlayer player);
 
+    void removePlayerFromQueue(UUID player);
+
     void connectFirstPlayerToDestinationServer();
 
     String getName();

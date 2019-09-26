@@ -5,7 +5,10 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,6 +41,7 @@ public final class Matsu extends Plugin {
         CONFIG = new ConfigurationFile();
         this.getProxy().getPluginManager().registerListener(this, new EventReactions());
         executorService.scheduleWithFixedDelay(() -> {
+            purgeQueues();
             queueServerOk = isServerUp(queueServerInfo);
             if (!queueServerOk) {
                 for (ProxiedPlayer player : getProxy().getPlayers()) {
@@ -55,6 +59,19 @@ public final class Matsu extends Plugin {
             CONFIG.slotsMap.forEach((name, slot) -> slot.broadcast(CONFIG.positionMessage.replace("&", "\247")));
         }, 10L, 10L, TimeUnit.SECONDS);
         getLogger().log(Level.INFO, "MatsuQueue has loaded.");
+    }
+
+    private void purgeQueues() {
+        List<UUID> removalList = new ArrayList<>();
+        CONFIG.slotsMap.forEach((str, cluster) -> {
+            for (UUID slot : cluster.getSlots()) {
+                ProxiedPlayer player = this.getProxy().getPlayer(slot);
+                if (player == null || !player.isConnected()) {
+                    removalList.add(slot);
+                }
+            }
+            removalList.forEach(cluster::onPlayerLeave);
+        });
     }
 
     @Override

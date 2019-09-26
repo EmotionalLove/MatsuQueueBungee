@@ -2,6 +2,8 @@ package me.someonelove.matsuqueue.bungee.queue;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -24,6 +26,8 @@ public interface IMatsuSlotCluster {
 
     void onPlayerLeave(ProxiedPlayer player);
 
+    void onPlayerLeave(UUID player);
+
     void occupySlot(ProxiedPlayer player);
 
     void associateQueue(IMatsuQueue queue);
@@ -33,4 +37,6 @@ public interface IMatsuSlotCluster {
     String getPermission();
 
     void broadcast(String str);
+
+    List<UUID> getSlots();
 }
