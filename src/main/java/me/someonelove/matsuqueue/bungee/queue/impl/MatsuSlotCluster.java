@@ -77,6 +77,17 @@ public class MatsuSlotCluster implements IMatsuSlotCluster, Listener {
         });
     }
 
+    @Override
+    public void onPlayerLeave(UUID player) {
+        if (slots.contains(player)) {
+            releaseSlot(player);
+            return;
+        }
+        this.getAssociatedQueues().forEach((name, queue) -> {
+            queue.removePlayerFromQueue(player);
+        });
+    }
+
 
     // these shouldn't be called by public code.
 
@@ -133,5 +144,10 @@ public class MatsuSlotCluster implements IMatsuSlotCluster, Listener {
                 integer.getAndIncrement();
             }
         });
+    }
+
+    @Override
+    public List<UUID> getSlots() {
+        return slots;
     }
 }

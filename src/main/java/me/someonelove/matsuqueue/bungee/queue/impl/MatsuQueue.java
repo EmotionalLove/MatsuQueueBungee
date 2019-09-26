@@ -42,6 +42,11 @@ public class MatsuQueue implements IMatsuQueue {
     }
 
     @Override
+    public void removePlayerFromQueue(UUID player) {
+        queue.remove(player);
+    }
+
+    @Override
     public void connectFirstPlayerToDestinationServer() {
         if (queue.isEmpty()) return;
         ProxiedPlayer player = Matsu.INSTANCE.getProxy().getPlayer(queue.getFirst());
