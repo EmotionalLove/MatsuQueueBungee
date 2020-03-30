@@ -18,7 +18,7 @@ import java.util.logging.Level;
  */
 public class ConfigurationFile {
 
-    public static final String FILE_NAME = "QueueConfig.yml";
+    public static final String FILE_NAME = "plugins/MatsuQueue/config.yml";
 
     public String queueServerKey;
     public String destinationServerKey;

@@ -41,6 +41,7 @@ public final class Matsu extends Plugin {
         CONFIG = new ConfigurationFile();
         this.getProxy().getPluginManager().registerListener(this, new EventReactions());
         executorService.scheduleWithFixedDelay(() -> {
+        	purgeSlots();
             purgeQueues();
             queueServerOk = isServerUp(queueServerInfo);
             if (!queueServerOk) {
@@ -61,19 +62,40 @@ public final class Matsu extends Plugin {
         getLogger().log(Level.INFO, "MatsuQueue has loaded.");
     }
 
-    private void purgeQueues() {
+    private void purgeSlots() {
         List<UUID> removalList = new ArrayList<>();
         CONFIG.slotsMap.forEach((str, cluster) -> {
             for (UUID slot : cluster.getSlots()) {
                 ProxiedPlayer player = this.getProxy().getPlayer(slot);
-                if (player == null || !player.isConnected()) {
+                if (player == null || !player.isConnected() || !player.getServer().getInfo().getName().equals(destinationServerInfo.getName())) {
                     removalList.add(slot);
+                    if (player != null) {
+                    	getLogger().log(Level.INFO, "Purging Player: " + player.getName() + player.getServer().getInfo().getName() + player.getServer().getInfo().getName().equals(destinationServerInfo.getName()));
+                    }
                 }
             }
             removalList.forEach(cluster::onPlayerLeave);
         });
     }
-
+    
+    private void purgeQueues() {
+    	List<UUID> removalList = new ArrayList<>();
+    	CONFIG.slotsMap.forEach((str, cluster) -> {
+    		cluster.getAssociatedQueues().forEach((name, queue) -> {
+    			for (UUID id : queue.getQueue()) {
+    				ProxiedPlayer player = this.getProxy().getPlayer(id);
+    				if (player == null || !player.isConnected() || !player.getServer().getInfo().getName().equals(queueServerInfo.getName())) {
+    					removalList.add(id);
+    					if (player != null) {
+    						getLogger().log(Level.INFO, "Purging Player: " + player.getName() + player.getServer().getInfo().getName() + player.getServer().getInfo().getName().equals(queueServerInfo.getName()));
+    					}
+    				}
+    			}
+    			removalList.forEach(queue::removePlayerFromQueue);
+    		});
+    	});
+    }
+    
     @Override
     public void onDisable() {
         // Plugin shutdown logic
