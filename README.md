@@ -1,3 +1,6 @@
+### Notice
+This plugin's development is suspended indefinitely until further notice. Take a look at the [1.15 branch](https://github.com/EmotionalLove/MatsuQueueBungee/tree/pull/12) for fixes to bugs that are present in the master branch. 
+
 # MatsuQueue (待つQueue)
 A queue plugin for controlling the player count of survival servers (or any type of server, for that matter).
 
